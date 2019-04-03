@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="ionic/css/ionic.min.css">
+		<title>UNIGESTOR</title>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+
+		<style>
+			@-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
+			@-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+			.error{
+				background-color: #F00;
+				color: white;
+				font-size: 12px;
+				padding: 5px 15px;
+				font-weight: bolder;
+				display:none;
+			}
+			.loader {
+                display: none;
+                position: fixed;
+                left: 0px;
+                top: 0px;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                background: url('images/Preloader_2.gif') 50% 50% no-repeat rgba(0, 0, 0, 0.7);
+            }
+		</style>
+
+		<link rel="stylesheet" href="css/app.css">
+		<link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
+
+		<script src="cordova.js" id="xdkJScordova_"></script>
+
+		<script src="js/app.js"></script>
+		<script src="js/init-app.js"></script>
+		<script src="xdk/init-dev.js"></script>
+
+		<script type="application/javascript" src="ionic/js/ionic.bundle.js"></script>
+		<script type="application/javascript" src="lib/jquery.min.js"></script>
+		<script type="application/javascript" src="marginal/marginal-position.js"></script>
+		<script type="application/javascript" src="js/index_init_services.js"></script>
+		<script type="application/javascript" src="js/index_user_scripts.js"></script>
+		<script type="application/javascript" src="xdk/ad/ionic_subpage.js"></script>
+
+	</head>
+
+	<body ng-app="myApp">
+
+		<div class="loader"></div>
+		
+		<script type="text/javascript">
+		$(document).ready(function(evt)
+		{
+			document.addEventListener('deviceready', function () {		  
+
+			  var notificationOpenedCallback = function(jsonData) {
+				console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+			  };
+
+				window.plugins.OneSignal
+				.startInit("b77524bc-9b3d-47da-9568-870ad4e32332")
+				.handleNotificationOpened(notificationOpenedCallback)
+				.endInit();
+				
+				window.plugins.OneSignal.getIds(function(ids) {
+					$('.loader').show();
+					token(ids.userId);
+				});
+				
+			}, false);
+			function token(token){
+				var src = 'http://igestaoweb.com.br/gsdelivery/';
+				var url = src;
+				$('#iframe_token').attr('src', url+'?token_id='+token);
+				$('.loader').hide();
+			}
+		});
+		</script>
+		<script type="text/javascript" language="javascript">
+		var tempo = window.setInterval(carregagps, 2000);
+		function carregagps(){
+			var latt = $('.lat').val();
+			var lngg = $('.long').val();
+			if(!latt && !lngg){
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(showPosition);
+				} else { 
+					alert("Necess?rio habilidar o GPS (Geolocalizador)");
+				}
+				
+				function showPosition(position) {
+					$(".lat").val(position.coords.latitude);
+					$(".long").val(position.coords.longitude);
+					$('iframe[name=iframe_token]').contents().find('.lat').val(position.coords.latitude);
+					$('iframe[name=iframe_token]').contents().find('.long').val(position.coords.longitude);
+				}
+			}
+		}
+		</script>
+
+		<div class="loader"></div>
+		<div class="main">
+			<iframe name="iframe_token" id="iframe_token"></iframe>
+		</div>
+	</body>
+</html>
