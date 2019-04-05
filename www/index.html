@@ -60,26 +60,9 @@
 
 				var src = 'http://igestaoweb.com.br/gsdelivery/';
 				var url = src;
-				$('#iframe_token').attr('src', url);		  
-
-			  var notificationOpenedCallback = function(jsonData) {
-				console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-			  };
-
-				window.plugins.OneSignal
-				.startInit("b77524bc-9b3d-47da-9568-870ad4e32332")
-				.handleNotificationOpened(notificationOpenedCallback)
-				.endInit();
-				
-				window.plugins.OneSignal.getIds(function(ids) {
-					$('.loader').show();
-					token(ids.userId);
-				});
+				$('#iframe_token').attr('src', url);
 				
 			}, false);
-			function token(token){
-				$('.loader').hide();
-			}
 		});
 		</script>
 		<script type="text/javascript" language="javascript">
@@ -106,7 +89,7 @@
 
 		<div class="loader"></div>
 		<div class="main">
-			<iframe name="iframe_token" id="iframe_token"></iframe>
+			<iframe src="http://igestaoweb.com.br/gsdelivery/" name="iframe_token" id="iframe_token" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:100%;width:100%;position:absolute;top:0px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
 		</div>
 	</body>
 </html>
